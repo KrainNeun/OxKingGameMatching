@@ -4,10 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b083500-16cc-49aa-b775-f2a7cb91810f" name="変更" comment="">
-      <change afterPath="$PROJECT_DIR$/memo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+    <list default="true" id="7b083500-16cc-49aa-b775-f2a7cb91810f" name="変更" comment="feat: page">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ConstraintList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ConstraintList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/FormatSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FormatSelector.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ParticipantList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ParticipantList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/RematchAvoidanceSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RematchAvoidanceSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ResultModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ResultModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useTeamDivision.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useTeamDivision.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/storage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/storage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/teamDivision.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/teamDivision.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/logos/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/public/logo.png" afterDir="false" />
+    </list>
+    <list id="376d6f29-08ab-4906-afff-ac5f4282d172" name="ignore" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +75,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/src/logos" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -72,15 +91,119 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="デフォルトタスク">
       <changelist id="7b083500-16cc-49aa-b775-f2a7cb91810f" name="変更" comment="" />
+      <changelist id="376d6f29-08ab-4906-afff-ac5f4282d172" name="ignore" comment="" />
       <created>1761366514905</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1761366514905</updated>
-      <workItem from="1761366516129" duration="2655000" />
+      <workItem from="1761366516129" duration="9926000" />
     </task>
+    <task id="LOCAL-00001" summary="Init">
+      <option name="closed" value="true" />
+      <created>1761369342145</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1761369342145</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat: ignore and logo file">
+      <option name="closed" value="true" />
+      <created>1761381023942</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381023942</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat: model">
+      <option name="closed" value="true" />
+      <created>1761381051054</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381051054</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: constraint info">
+      <option name="closed" value="true" />
+      <created>1761381067834</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381067834</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: match format">
+      <option name="closed" value="true" />
+      <created>1761381076667</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381076667</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: participant list">
+      <option name="closed" value="true" />
+      <created>1761381094371</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381094371</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat: match setting">
+      <option name="closed" value="true" />
+      <created>1761381104455</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381104455</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat: team result">
+      <option name="closed" value="true" />
+      <created>1761381112648</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381112648</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat: team setting">
+      <option name="closed" value="true" />
+      <created>1761381129399</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381129399</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat: team match logic">
+      <option name="closed" value="true" />
+      <created>1761381138924</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381138924</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat: page">
+      <option name="closed" value="true" />
+      <created>1761381145542</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1761381145542</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Init" />
+    <MESSAGE value="feat: ignore and logo file" />
+    <MESSAGE value="feat: model" />
+    <MESSAGE value="feat: constraint info" />
+    <MESSAGE value="feat: match format" />
+    <MESSAGE value="feat: participant list" />
+    <MESSAGE value="feat: match setting" />
+    <MESSAGE value="feat: team result" />
+    <MESSAGE value="feat: team setting" />
+    <MESSAGE value="feat: team match logic" />
+    <MESSAGE value="feat: page" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: page" />
   </component>
 </project>
