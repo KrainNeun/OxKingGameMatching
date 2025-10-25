@@ -1,11 +1,13 @@
-// チームカラー定義
+// チームカラー定義（フルーツテーマ）
 export const TEAM_COLORS = {
-  RED: { hex: '#D92D20', name: '赤' },
-  BLUE: { hex: '#1570EF', name: '青' },
-  GREEN: { hex: '#17B26A', name: '緑' },
-  YELLOW: { hex: '#F79009', name: '黄' },
-  PURPLE: { hex: '#7A5AF8', name: '紫' },
-  ORANGE: { hex: '#F04438', name: '橙' },
+  STRAWBERRY: { hex: '#FF6B9D', name: 'いちご', emoji: '🍓' },
+  GRAPE: { hex: '#9D4EDD', name: 'ぶどう', emoji: '🍇' },
+  LEMON: { hex: '#FFD60A', name: 'レモン', emoji: '🍋' },
+  MELON: { hex: '#95D5B2', name: 'メロン', emoji: '🍈' },
+  PEACH: { hex: '#FFB3BA', name: 'もも', emoji: '🍑' },
+  ORANGE: { hex: '#FF9F1C', name: 'みかん', emoji: '🍊' },
+  BANANA: { hex: '#FFF176', name: 'バナナ', emoji: '🍌' },
+  KIWI: { hex: '#8BC34A', name: 'キウイ', emoji: '🥝' },
 } as const;
 
 export type TeamColorKey = keyof typeof TEAM_COLORS;

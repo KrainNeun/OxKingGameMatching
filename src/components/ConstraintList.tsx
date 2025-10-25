@@ -52,8 +52,8 @@ export default function ConstraintList({
         </label>
         <button
           type="button"
-          className="text-slate-400 hover:text-slate-600 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-          title="同チーム＝必ず一緒、別チーム＝必ず別"
+          className="text-slate-400 hover:text-pink-500 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+          title="ぎゅっと＝必ず一緒、ばらっと＝必ず別"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -67,7 +67,7 @@ export default function ConstraintList({
             <select
               value={participant1Id}
               onChange={(e) => setParticipant1Id(e.target.value)}
-              className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent bg-white text-sm"
+              className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white text-sm"
             >
               <option value="">選択してください</option>
               {availableParticipants.map((p) => (
@@ -77,14 +77,14 @@ export default function ConstraintList({
               ))}
             </select>
             <div className="flex justify-center">
-              <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
               </svg>
             </div>
             <select
               value={participant2Id}
               onChange={(e) => setParticipant2Id(e.target.value)}
-              className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent bg-white text-sm"
+              className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white text-sm"
             >
               <option value="">選択してください</option>
               {availableParticipants
@@ -98,28 +98,28 @@ export default function ConstraintList({
           </div>
 
           {/* タブ切り替え風の制約タイプ選択 */}
-          <div className="flex gap-1 p-1 bg-slate-100 rounded-lg">
+          <div className="flex gap-1 p-1 bg-pink-50 rounded-lg">
             <button
               type="button"
               onClick={() => setConstraintType('same')}
-              className={`flex-1 px-4 py-3 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 px-4 py-3 rounded-md text-sm font-bold transition-all ${
                 constraintType === 'same'
-                  ? 'bg-white text-slate-800 shadow-sm'
+                  ? 'bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-800'
               }`}
             >
-              同チーム
+              ぎゅっと
             </button>
             <button
               type="button"
               onClick={() => setConstraintType('different')}
-              className={`flex-1 px-4 py-3 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 px-4 py-3 rounded-md text-sm font-bold transition-all ${
                 constraintType === 'different'
-                  ? 'bg-white text-slate-800 shadow-sm'
+                  ? 'bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-800'
               }`}
             >
-              別チーム
+              ばらっと
             </button>
           </div>
 
@@ -127,43 +127,43 @@ export default function ConstraintList({
             type="button"
             onClick={handleAdd}
             disabled={!participant1Id || !participant2Id || participant1Id === participant2Id}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed font-medium text-sm shadow-sm"
+            className="w-full px-4 py-3 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-lg hover:from-pink-500 hover:to-rose-500 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed font-bold text-sm shadow-sm"
           >
-            ペア追加
+            これで決まり！
           </button>
         </div>
       ) : (
-        <p className="text-sm text-slate-500 mb-4 py-8 text-center bg-slate-50 rounded-lg border border-slate-200">
+        <p className="text-sm text-slate-500 mb-4 py-8 text-center bg-pink-50 rounded-lg border border-pink-200">
           参加者が2名以上必要です
         </p>
       )}
 
       <div className="space-y-2">
         {constraints.length === 0 ? (
-          <p className="text-center text-slate-400 py-8 text-sm bg-slate-50 rounded-lg border-2 border-dashed border-slate-200">
+          <p className="text-center text-slate-400 py-8 text-sm bg-pink-50/50 rounded-lg border-2 border-dashed border-pink-200">
             制約なし
           </p>
         ) : (
           constraints.map((constraint) => (
             <div
               key={constraint.id}
-              className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
+              className="flex items-center justify-between p-4 bg-pink-50/50 border border-pink-200 rounded-lg hover:border-pink-300 transition-colors"
             >
               <div className="flex-1 min-w-0">
                 <div className="text-sm text-slate-700 flex flex-wrap items-center gap-2">
                   <span className="font-medium">{getParticipantName(constraint.participant1Id)}</span>
-                  <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-pink-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                   </svg>
                   <span className="font-medium">{getParticipantName(constraint.participant2Id)}</span>
                   <span
-                    className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    className={`px-2 py-0.5 rounded-full text-xs font-bold ${
                       constraint.type === 'same'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'bg-amber-100 text-amber-700'
+                        ? 'bg-pink-100 text-pink-700'
+                        : 'bg-purple-100 text-purple-700'
                     }`}
                   >
-                    {constraint.type === 'same' ? '同チーム' : '別チーム'}
+                    {constraint.type === 'same' ? 'ぎゅっと' : 'ばらっと'}
                   </span>
                 </div>
               </div>

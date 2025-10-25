@@ -1,6 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
-  AppState,
   GameFormat,
   Participant,
   PairConstraint,
@@ -8,7 +7,7 @@ import {
   RematchAvoidanceConfig,
 } from '@/types';
 import { divideTeams } from '@/lib/teamDivision';
-import { saveMatchHistory } from '@/lib/storage';
+import { saveMatchHistory, saveSettings, loadSettings } from '@/lib/storage';
 
 const initialRematchConfig: RematchAvoidanceConfig = {
   enabled: true,
@@ -16,13 +15,38 @@ const initialRematchConfig: RematchAvoidanceConfig = {
 };
 
 export function useTeamDivision() {
-  const [format, setFormat] = useState<GameFormat>(2); // デフォルトを2v2に変更
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [format, setFormat] = useState<GameFormat>(2);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [constraints, setConstraints] = useState<PairConstraint[]>([]);
   const [rematchAvoidance, setRematchAvoidance] =
     useState<RematchAvoidanceConfig>(initialRematchConfig);
   const [result, setResult] = useState<TeamDivisionResult | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // 初回読み込み時に設定を復元
+  useEffect(() => {
+    const settings = loadSettings();
+    if (settings) {
+      setFormat(settings.format);
+      setParticipants(settings.participants);
+      setConstraints(settings.constraints);
+      setRematchAvoidance(settings.rematchAvoidance);
+    }
+    setIsInitialized(true);
+  }, []);
+
+  // 設定が変更されたら保存（初回ロード後のみ）
+  useEffect(() => {
+    if (!isInitialized) return;
+    
+    saveSettings({
+      format,
+      participants,
+      constraints,
+      rematchAvoidance,
+    });
+  }, [format, participants, constraints, rematchAvoidance, isInitialized]);
 
   // 参加者追加
   const addParticipant = useCallback((name: string) => {
@@ -51,13 +75,7 @@ export function useTeamDivision() {
     
     // 観戦になった場合、そのIDを含むペア制約を削除
     setConstraints((prev) =>
-      prev.filter((c) => {
-        const participant = prev.find((p) => p.id === id);
-        if (!participant) return true;
-        
-        // この参加者が観戦になる場合、そのペアを削除
-        return c.participant1Id !== id && c.participant2Id !== id;
-      })
+      prev.filter((c) => c.participant1Id !== id && c.participant2Id !== id)
     );
   }, []);
 

@@ -17,7 +17,7 @@ export default function FormatSelector({ value, onChange }: FormatSelectorProps)
   return (
     <div>
       <label className="block text-sm font-semibold text-slate-700 mb-3">
-        フォーマット
+        対戦形式
       </label>
       <div className="grid grid-cols-5 gap-2">
         {formats.map((format) => (
@@ -25,10 +25,10 @@ export default function FormatSelector({ value, onChange }: FormatSelectorProps)
             key={format.value}
             type="button"
             onClick={() => onChange(format.value)}
-            className={`py-3 rounded-lg font-semibold text-sm border-2 transition-all ${
+            className={`py-3 rounded-lg font-bold text-sm border-2 transition-all ${
               value === format.value
-                ? 'bg-slate-800 text-white border-slate-800 shadow-md'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                ? 'bg-gradient-to-r from-pink-400 to-rose-400 text-white border-transparent shadow-lg shadow-pink-200'
+                : 'bg-white text-slate-600 border-pink-200 hover:border-pink-300 hover:bg-pink-50'
             }`}
           >
             {format.label}

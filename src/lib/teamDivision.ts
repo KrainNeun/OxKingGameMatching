@@ -36,6 +36,13 @@ class SeededRandom {
 }
 
 /**
+ * ペアを正規化（A,CとC,Aを同一として扱う）
+ */
+function normalizePair(id1: string, id2: string): string {
+  return [id1, id2].sort().join(',');
+}
+
+/**
  * チーム分割を実行
  */
 export function divideTeams(config: TeamDivisionConfig): TeamDivisionResult {
@@ -66,9 +73,31 @@ export function divideTeams(config: TeamDivisionConfig): TeamDivisionResult {
   const teamCount = Math.ceil(activeParticipants.length / format);
   const warnings: string[] = [];
 
+  // 制約の正規化と重複チェック
+  const normalizedConstraints = new Map<string, PairConstraint>();
+  const duplicates: string[] = [];
+  
+  constraints.forEach((c) => {
+    const key = normalizePair(c.participant1Id, c.participant2Id);
+    if (normalizedConstraints.has(key)) {
+      const p1 = participants.find(p => p.id === c.participant1Id)?.name || '不明';
+      const p2 = participants.find(p => p.id === c.participant2Id)?.name || '不明';
+      duplicates.push(`${p1}と${p2}`);
+    } else {
+      normalizedConstraints.set(key, c);
+    }
+  });
+
+  if (duplicates.length > 0) {
+    warnings.push(`重複するペア設定: ${duplicates.join(', ')}`);
+  }
+
+  // 正規化された制約リストを使用
+  const validConstraints = Array.from(normalizedConstraints.values());
+
   // Step 1: ペア制約を最優先で適用
   const { constrainedTeams, remainingParticipants, constraintConflicts } = 
-    applyConstraintsFirst(activeParticipants, constraints, format, teamCount);
+    applyConstraintsFirst(activeParticipants, validConstraints, format, teamCount);
 
   if (constraintConflicts > 0) {
     warnings.push(
@@ -127,7 +156,7 @@ export function divideTeams(config: TeamDivisionConfig): TeamDivisionResult {
 }
 
 /**
- * ペア制約を最優先で適用（新しいロジック）
+ * ペア制約を最優先で適用
  */
 function applyConstraintsFirst(
   participants: Participant[],
@@ -284,8 +313,6 @@ function applyRematchAvoidance(
       conflicts++;
     }
   }
-
-  // TODO: 衝突がある場合の再スワップロジック（将来の拡張）
 
   return { teams, conflicts };
 }
