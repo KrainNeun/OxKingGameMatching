@@ -66,20 +66,23 @@ export function divideTeams(config: TeamDivisionConfig): TeamDivisionResult {
   const teamCount = Math.ceil(activeParticipants.length / format);
   const warnings: string[] = [];
 
-  // Step 1: ランダム初期分割
-  let shuffled = random.shuffle(activeParticipants);
-  let teams = initializeTeams(shuffled, format, teamCount);
-
-  // Step 2: 制約チェック & スワップ
-  const constraintResult = applyConstraints(teams, constraints);
-  teams = constraintResult.teams;
-  const constraintConflicts = constraintResult.conflicts;
+  // Step 1: ペア制約を最優先で適用
+  const { constrainedTeams, remainingParticipants, constraintConflicts } = 
+    applyConstraintsFirst(activeParticipants, constraints, format, teamCount);
 
   if (constraintConflicts > 0) {
     warnings.push(
       `制約が完全には満たせませんでした（衝突: ${constraintConflicts}件）`
     );
   }
+
+  // Step 2: 残りの参加者をランダムに配置
+  let teams = distributeRemainingParticipants(
+    constrainedTeams,
+    remainingParticipants,
+    format,
+    random
+  );
 
   // Step 3: リマッチ回避
   let rematchConflicts = 0;
@@ -124,15 +127,20 @@ export function divideTeams(config: TeamDivisionConfig): TeamDivisionResult {
 }
 
 /**
- * 初期チーム分割
+ * ペア制約を最優先で適用（新しいロジック）
  */
-function initializeTeams(
+function applyConstraintsFirst(
   participants: Participant[],
+  constraints: PairConstraint[],
   format: number,
   teamCount: number
-): Omit<Team, 'color'>[] {
+): {
+  constrainedTeams: Omit<Team, 'color'>[];
+  remainingParticipants: Participant[];
+  constraintConflicts: number;
+} {
+  // 初期チーム作成
   const teams: Omit<Team, 'color'>[] = [];
-
   for (let i = 0; i < teamCount; i++) {
     teams.push({
       id: `team-${i}`,
@@ -141,75 +149,96 @@ function initializeTeams(
     });
   }
 
-  participants.forEach((participant, index) => {
-    const teamIndex = index % teamCount;
-    teams[teamIndex].members.push(participant);
-  });
-
-  return teams;
-}
-
-/**
- * 制約を適用（簡易版：完全解を保証しない）
- */
-function applyConstraints(
-  teams: Omit<Team, 'color'>[],
-  constraints: PairConstraint[]
-): { teams: Omit<Team, 'color'>[]; conflicts: number } {
+  const assignedIds = new Set<string>();
   let conflicts = 0;
-  const maxAttempts = 100;
 
-  for (const constraint of constraints) {
-    let satisfied = false;
-    let attempts = 0;
-
-    while (!satisfied && attempts < maxAttempts) {
-      const team1Index = teams.findIndex((t) =>
-        t.members.some((m) => m.id === constraint.participant1Id)
-      );
-      const team2Index = teams.findIndex((t) =>
-        t.members.some((m) => m.id === constraint.participant2Id)
-      );
-
-      if (team1Index === -1 || team2Index === -1) break;
-
-      const isSameTeam = team1Index === team2Index;
-      const shouldBeSame = constraint.type === 'same';
-
-      if (isSameTeam === shouldBeSame) {
-        satisfied = true;
-      } else {
-        // スワップを試みる
-        const member1 = teams[team1Index].members.find(
-          (m) => m.id === constraint.participant1Id
-        );
-        const member2 = teams[team2Index].members.find(
-          (m) => m.id === constraint.participant2Id
-        );
-
-        if (member1 && member2) {
-          // メンバーを交換
-          teams[team1Index].members = teams[team1Index].members.filter(
-            (m) => m.id !== constraint.participant1Id
-          );
-          teams[team2Index].members = teams[team2Index].members.filter(
-            (m) => m.id !== constraint.participant2Id
-          );
-
-          teams[team1Index].members.push(member2);
-          teams[team2Index].members.push(member1);
-        }
-      }
-
-      attempts++;
+  // 「同チーム」制約を最初に処理
+  const sameTeamConstraints = constraints.filter((c) => c.type === 'same');
+  for (const constraint of sameTeamConstraints) {
+    const { participant1Id, participant2Id } = constraint;
+    
+    // すでに配置済みかチェック
+    if (assignedIds.has(participant1Id) || assignedIds.has(participant2Id)) {
+      conflicts++;
+      continue;
     }
 
-    if (!satisfied) {
+    // 空きのあるチームに配置
+    const targetTeam = teams.find((t) => t.members.length <= format - 2);
+    if (targetTeam) {
+      const p1 = participants.find((p) => p.id === participant1Id);
+      const p2 = participants.find((p) => p.id === participant2Id);
+      if (p1 && p2) {
+        targetTeam.members.push(p1, p2);
+        assignedIds.add(participant1Id);
+        assignedIds.add(participant2Id);
+      }
+    } else {
       conflicts++;
     }
   }
 
-  return { teams, conflicts };
+  // 「別チーム」制約を処理
+  const differentTeamConstraints = constraints.filter((c) => c.type === 'different');
+  for (const constraint of differentTeamConstraints) {
+    const { participant1Id, participant2Id } = constraint;
+    
+    // すでに配置済みかチェック
+    if (assignedIds.has(participant1Id) || assignedIds.has(participant2Id)) {
+      conflicts++;
+      continue;
+    }
+
+    // 別々のチームに配置
+    const team1 = teams.find((t) => t.members.length < format);
+    const team2 = teams.find((t) => t.id !== team1?.id && t.members.length < format);
+    
+    if (team1 && team2) {
+      const p1 = participants.find((p) => p.id === participant1Id);
+      const p2 = participants.find((p) => p.id === participant2Id);
+      if (p1 && p2) {
+        team1.members.push(p1);
+        team2.members.push(p2);
+        assignedIds.add(participant1Id);
+        assignedIds.add(participant2Id);
+      }
+    } else {
+      conflicts++;
+    }
+  }
+
+  // 残りの参加者
+  const remainingParticipants = participants.filter(
+    (p) => !assignedIds.has(p.id)
+  );
+
+  return {
+    constrainedTeams: teams,
+    remainingParticipants,
+    constraintConflicts: conflicts,
+  };
+}
+
+/**
+ * 残りの参加者を配置
+ */
+function distributeRemainingParticipants(
+  teams: Omit<Team, 'color'>[],
+  remainingParticipants: Participant[],
+  format: number,
+  random: SeededRandom
+): Omit<Team, 'color'>[] {
+  const shuffled = random.shuffle(remainingParticipants);
+  
+  for (const participant of shuffled) {
+    // 空きのあるチームに順番に配置
+    const targetTeam = teams.find((t) => t.members.length < format);
+    if (targetTeam) {
+      targetTeam.members.push(participant);
+    }
+  }
+
+  return teams;
 }
 
 /**
