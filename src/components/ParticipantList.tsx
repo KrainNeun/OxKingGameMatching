@@ -35,19 +35,19 @@ export default function ParticipantList({
         </label>
       </div>
 
-      <div className="flex gap-2 mb-3 w-full">
+      <div className="flex flex-nowrap gap-2 mb-3 w-full">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
           placeholder="名前を入力"
-          className="flex-1 px-4 py-3 border border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white placeholder:text-slate-400 text-base"
+          className="flex-1 min-w-0 px-4 py-3 border border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white placeholder:text-slate-400 text-base"
         />
         <button
           type="button"
           onClick={handleAdd}
-          className="px-5 py-3 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-lg hover:from-pink-500 hover:to-rose-500 font-bold shadow-sm text-sm whitespace-nowrap"
+          className="flex-shrink-0 px-4 py-3 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-lg hover:from-pink-500 hover:to-rose-500 font-bold shadow-sm text-sm whitespace-nowrap"
         >
           追加
         </button>
