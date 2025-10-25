@@ -139,9 +139,9 @@ export function divideTeams(config: TeamDivisionConfig): TeamDivisionResult {
   coloredTeams.forEach((team) => {
     if (team.members.length < team.capacity) {
       warnings.push(
-        `チーム${TEAM_COLORS[team.color].name}が${
+        `チーム${TEAM_COLORS[team.color].name}は、あと ${
           team.capacity - team.members.length
-        }名不足しています`
+        }人でぎゅ～っとできるよ！`
       );
     }
   });

@@ -86,12 +86,6 @@ export default function TeamResult({
                   else if (warning.includes('リマッチ回避が完全には適用できませんでした')) {
                     displayWarning = '同じ対戦をさけられなかったよ';
                   }
-                  // 「チーム◯が◯名不足しています」→「◯チームがもう少し」
-                  else if (warning.includes('名不足しています')) {
-                    // この警告はチームカードで表示されるので、ここでは表示しない
-                    return null;
-                  }
-                  // その他の警告はそのまま表示
                   
                   return (
                     <li key={index} className="flex items-start gap-2">
