@@ -35,12 +35,12 @@ export default function ParticipantList({
         </label>
       </div>
 
-      <div className="flex gap-2 mb-3">
+      <div className="flex gap-2 mb-3 w-full">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
+          onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
           placeholder="名前を入力"
           className="flex-1 px-4 py-3 border border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white placeholder:text-slate-400 text-base"
         />

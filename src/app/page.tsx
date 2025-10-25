@@ -9,6 +9,7 @@ import ConstraintList from '@/components/ConstraintList';
 import ResultModal from '@/components/ResultModal';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import Image from 'next/image';
+import logo from '@/assets/logo.png';
 import { useState } from 'react';
 
 export default function Home() {
@@ -60,7 +61,7 @@ export default function Home() {
           <div className="text-center mb-8">
             <div className="mb-2 flex justify-center">
               <Image 
-                src="/logo.png" 
+                src={logo}
                 alt="ぎゅ～まっち" 
                 width={200} 
                 height={60}
