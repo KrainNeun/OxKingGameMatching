@@ -16,7 +16,7 @@ const initialRematchConfig: RematchAvoidanceConfig = {
 };
 
 export function useTeamDivision() {
-  const [format, setFormat] = useState<GameFormat>(5);
+  const [format, setFormat] = useState<GameFormat>(2); // デフォルトを2v2に変更
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [constraints, setConstraints] = useState<PairConstraint[]>([]);
   const [rematchAvoidance, setRematchAvoidance] =
@@ -47,6 +47,17 @@ export function useTeamDivision() {
   const toggleSpectator = useCallback((id: string) => {
     setParticipants((prev) =>
       prev.map((p) => (p.id === id ? { ...p, isSpectator: !p.isSpectator } : p))
+    );
+    
+    // 観戦になった場合、そのIDを含むペア制約を削除
+    setConstraints((prev) =>
+      prev.filter((c) => {
+        const participant = prev.find((p) => p.id === id);
+        if (!participant) return true;
+        
+        // この参加者が観戦になる場合、そのペアを削除
+        return c.participant1Id !== id && c.participant2Id !== id;
+      })
     );
   }, []);
 
@@ -121,6 +132,11 @@ export function useTeamDivision() {
     executeTeamDivision();
   }, [executeTeamDivision]);
 
+  // 結果をクリア（モーダルを閉じる）
+  const clearResult = useCallback(() => {
+    setResult(null);
+  }, []);
+
   return {
     format,
     setFormat,
@@ -138,5 +154,6 @@ export function useTeamDivision() {
     isProcessing,
     executeTeamDivision,
     redivide,
+    clearResult,
   };
 }
