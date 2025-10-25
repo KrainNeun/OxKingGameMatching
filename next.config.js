@@ -5,8 +5,8 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'export',                 // ← 静的HTMLを出力
   images: { unoptimized: true },    // ← next/imageを使う場合の対応
-  basePath: isProd ? '/oxking-game-matching' : '',
-  assetPrefix: isProd ? '/oxking-game-matching/' : undefined,
+  basePath: isProd ? '/OxKingGameMatching' : '',
+  assetPrefix: isProd ? '/OxKingGameMatching/' : undefined,
   trailingSlash: true,              // ← /about → /about/index.html形式で出力
 };
 
