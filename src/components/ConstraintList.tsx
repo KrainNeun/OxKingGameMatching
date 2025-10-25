@@ -20,6 +20,18 @@ export default function ConstraintList({
 
   const activeParticipants = participants.filter((p) => !p.isSpectator);
 
+  // ペア設定に使用されている参加者IDを取得
+  const usedParticipantIds = new Set<string>();
+  constraints.forEach((constraint) => {
+    usedParticipantIds.add(constraint.participant1Id);
+    usedParticipantIds.add(constraint.participant2Id);
+  });
+
+  // 選択可能な参加者（ペア未設定の人のみ）
+  const availableParticipants = activeParticipants.filter(
+    (p) => !usedParticipantIds.has(p.id)
+  );
+
   const handleAdd = () => {
     if (participant1Id && participant2Id && participant1Id !== participant2Id) {
       onAdd(participant1Id, participant2Id, constraintType);
@@ -40,7 +52,7 @@ export default function ConstraintList({
         </label>
         <button
           type="button"
-          className="text-slate-400 hover:text-slate-600 transition-colors"
+          className="text-slate-400 hover:text-slate-600 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
           title="同チーム＝必ず一緒、別チーム＝必ず別"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -51,29 +63,31 @@ export default function ConstraintList({
 
       {activeParticipants.length >= 2 ? (
         <div className="space-y-3 mb-4">
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-col gap-2">
             <select
               value={participant1Id}
               onChange={(e) => setParticipant1Id(e.target.value)}
-              className="flex-1 px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent bg-white text-sm"
+              className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent bg-white text-sm"
             >
               <option value="">選択してください</option>
-              {activeParticipants.map((p) => (
+              {availableParticipants.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
                 </option>
               ))}
             </select>
-            <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
+            <div className="flex justify-center">
+              <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+            </div>
             <select
               value={participant2Id}
               onChange={(e) => setParticipant2Id(e.target.value)}
-              className="flex-1 px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent bg-white text-sm"
+              className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent bg-white text-sm"
             >
               <option value="">選択してください</option>
-              {activeParticipants
+              {availableParticipants
                 .filter((p) => p.id !== participant1Id)
                 .map((p) => (
                   <option key={p.id} value={p.id}>
@@ -83,34 +97,37 @@ export default function ConstraintList({
             </select>
           </div>
 
-          <div className="flex items-center gap-4 px-2">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                value="same"
-                checked={constraintType === 'same'}
-                onChange={(e) => setConstraintType(e.target.value as PairConstraintType)}
-                className="w-4 h-4 border-slate-300 text-slate-800 focus:ring-slate-800"
-              />
-              <span className="text-sm text-slate-700">同チーム</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                value="different"
-                checked={constraintType === 'different'}
-                onChange={(e) => setConstraintType(e.target.value as PairConstraintType)}
-                className="w-4 h-4 border-slate-300 text-slate-800 focus:ring-slate-800"
-              />
-              <span className="text-sm text-slate-700">別チーム</span>
-            </label>
+          {/* タブ切り替え風の制約タイプ選択 */}
+          <div className="flex gap-1 p-1 bg-slate-100 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setConstraintType('same')}
+              className={`flex-1 px-4 py-3 rounded-md text-sm font-medium transition-all ${
+                constraintType === 'same'
+                  ? 'bg-white text-slate-800 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-800'
+              }`}
+            >
+              同チーム
+            </button>
+            <button
+              type="button"
+              onClick={() => setConstraintType('different')}
+              className={`flex-1 px-4 py-3 rounded-md text-sm font-medium transition-all ${
+                constraintType === 'different'
+                  ? 'bg-white text-slate-800 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-800'
+              }`}
+            >
+              別チーム
+            </button>
           </div>
 
           <button
             type="button"
             onClick={handleAdd}
             disabled={!participant1Id || !participant2Id || participant1Id === participant2Id}
-            className="w-full px-4 py-2.5 bg-slate-700 text-white rounded-lg hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed font-medium text-sm shadow-sm"
+            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed font-medium text-sm shadow-sm"
           >
             ペア追加
           </button>
@@ -132,28 +149,33 @@ export default function ConstraintList({
               key={constraint.id}
               className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
             >
-              <span className="text-sm text-slate-700">
-                <span className="font-medium">{getParticipantName(constraint.participant1Id)}</span>
-                <svg className="inline-block w-4 h-4 mx-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-                <span className="font-medium">{getParticipantName(constraint.participant2Id)}</span>
-                <span
-                  className={`ml-3 px-2.5 py-1 rounded-full text-xs font-medium ${
-                    constraint.type === 'same'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'bg-amber-100 text-amber-700'
-                  }`}
-                >
-                  {constraint.type === 'same' ? '同チーム' : '別チーム'}
-                </span>
-              </span>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm text-slate-700 flex flex-wrap items-center gap-2">
+                  <span className="font-medium">{getParticipantName(constraint.participant1Id)}</span>
+                  <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
+                  <span className="font-medium">{getParticipantName(constraint.participant2Id)}</span>
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      constraint.type === 'same'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-amber-100 text-amber-700'
+                    }`}
+                  >
+                    {constraint.type === 'same' ? '同チーム' : '別チーム'}
+                  </span>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => onRemove(constraint.id)}
-                className="text-slate-400 hover:text-red-500 text-sm font-medium ml-4"
+                className="text-red-500 hover:text-red-600 text-sm font-medium ml-4 flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
+                aria-label="削除"
               >
-                削除
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
               </button>
             </div>
           ))
